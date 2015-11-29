@@ -141,12 +141,14 @@ class Fetcher(object):
                 zendesk_articles = self.req.get_items(model.Article, section)
                 category.sections.append(section)
                 for zendesk_article in zendesk_articles:
-                    body = html2text.html2text(zendesk_article.get('body', ''))
-                    article_filename = utils.slugify(zendesk_article['title'])
-                    article = model.Article(section, zendesk_article['title'], body, article_filename)
-                    print('Article %s created' % article.name)
-                    article.meta = zendesk_article
-                    section.articles.append(article)
+                    logging.debug('Article Info:' + zendesk_article['title'])
+                    if zendesk_article['body']:
+                        body = html2text.html2text(zendesk_article.get('body', ''))
+                        article_filename = utils.slugify(zendesk_article['title'])
+                        article = model.Article(section, zendesk_article['title'], body, article_filename)
+                        print('Article %s created' % article.name)
+                        article.meta = zendesk_article
+                        section.articles.append(article)
         return categories
 
 
@@ -161,13 +163,15 @@ class Pusher(object):
     def _has_content_changed(self, translation, item, locale):
         zendesk_content = self.req.get_translation(item, locale)
         item_content = translation.to_dict(self.image_cdn)
-        for key in item_content:
-            zendesk_body = zendesk_content.get(key, '')
-            zendesk_hash = hashlib.md5(zendesk_body.encode('utf-8'))
-            item_hash = hashlib.md5(item_content[key].encode('utf-8'))
-            if zendesk_hash.hexdigest() != item_hash.hexdigest():
-                return True
-        return False
+        try:
+            for key in item_content:
+                zendesk_body = zendesk_content.get(key, '')
+                zendesk_hash = hashlib.md5(zendesk_body.encode('utf-8'))
+                item_hash = hashlib.md5(item_content[key].encode('utf-8'))
+                if zendesk_hash.hexdigest() != item_hash.hexdigest():
+                    return True
+        except:
+            return False
 
     def _push_new_item(self, item, parent=None):
         data = {item.zendesk_name: item.to_dict(self.image_cdn)}

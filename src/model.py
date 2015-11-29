@@ -4,6 +4,13 @@ import markdown
 
 DEFAULT_LOCALE = 'en-US'
 
+_extension_configs = {
+    'markdown.extensions.codehilite':
+    {
+        'noclasses': True
+    }
+}
+
 
 class Base(object):
     _meta_exp = '.meta'
@@ -173,7 +180,8 @@ class ArticleTranslation(object):
         body = self.body
         if image_cdn:
             body = utils.convert_to_cdn_path(image_cdn, body)
-        body = markdown.markdown(body)
+        body = markdown.markdown(body, extensions=['markdown.extensions.fenced_code', 'markdown.extensions.codehilite'],
+                                 extension_configs=_extension_configs)
 
         return {
             'title': self.name,
@@ -186,7 +194,7 @@ class Article(Base):
     zendesk_name = 'article'
     zendesk_group = 'articles'
 
-    _body_exp = '.mkdown'
+    _body_exp = '.md'
     _meta_pattern = '.article_{}'
 
     def __init__(self, section, name, body, filename):
@@ -214,7 +222,8 @@ class Article(Base):
         body = self.body
         if image_cdn:
             body = utils.convert_to_cdn_path(image_cdn, body)
-        body = markdown.markdown(body)
+        body = markdown.markdown(body, extensions=['markdown.extensions.fenced_code', 'markdown.extensions.codehilite'],
+                                 extension_configs=_extension_configs)
         return {
             'title': self.name,
             'body': body,
