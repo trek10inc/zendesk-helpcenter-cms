@@ -7,7 +7,7 @@ DEFAULT_LOCALE = 'en-US'
 _extension_configs = {
     'markdown.extensions.codehilite':
     {
-        'noclasses': True
+        'noclasses': False
     }
 }
 
