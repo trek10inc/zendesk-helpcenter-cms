@@ -180,7 +180,7 @@ class ArticleTranslation(object):
         body = self.body
         if image_cdn:
             body = utils.convert_to_cdn_path(image_cdn, body)
-        body = markdown.markdown(body, extensions=['markdown.extensions.fenced_code', 'markdown.extensions.codehilite', 'custom_div_class'],
+        body = markdown.markdown(body, extensions=['markdown.extensions.fenced_code', 'markdown.extensions.codehilite', 'markdown.extensions.tables', 'custom_div_class'],
                                  extension_configs=_extension_configs)
 
         return {
