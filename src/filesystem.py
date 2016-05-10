@@ -3,6 +3,7 @@ import os
 import logging
 import re
 import shutil
+import codecs
 
 import model
 
@@ -20,7 +21,7 @@ class FilesystemClient(object):
     def save_text(self, path, data):
         full_path = self._path_for(path)
         os.makedirs(os.path.dirname(full_path), exist_ok=True)
-        with open(full_path, 'w') as fp:
+        with codecs.open(full_path, 'w', encoding='utf8') as fp:
             fp.write(data)
         return data
 
