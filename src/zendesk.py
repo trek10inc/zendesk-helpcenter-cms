@@ -9,6 +9,7 @@ import model
 import utils
 
 requests.packages.urllib3.disable_warnings()
+html2text.BODY_WIDTH = 0
 
 
 class ZendeskRequest(object):
