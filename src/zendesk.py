@@ -9,8 +9,8 @@ import model
 import utils
 
 requests.packages.urllib3.disable_warnings()
-html2text.BODY_WIDTH = 0
-
+h2t = html2text.HTML2Text()
+h2t.body_width = 0
 
 class ZendeskRequest(object):
     _default_url = 'https://{}/api/v2/help_center/' + utils.to_zendesk_locale(model.DEFAULT_LOCALE) + '/{}'
@@ -144,7 +144,7 @@ class Fetcher(object):
                 for zendesk_article in zendesk_articles:
                     logging.debug('Article Info:' + zendesk_article['title'])
                     if zendesk_article['body']:
-                        body = html2text.html2text(zendesk_article.get('body', ''))
+                        body = h2t.handle(zendesk_article.get('body', ''))
                         article_filename = utils.slugify(zendesk_article['title'])
                         article = model.Article(section, zendesk_article['title'], body, article_filename)
                         print('Article %s created' % article.name)
