@@ -147,7 +147,7 @@ class Fetcher(object):
                         body = h2t.handle(zendesk_article.get('body', ''))
                         article_filename = utils.slugify(zendesk_article['title'])
                         article = model.Article(section, zendesk_article['title'], body, article_filename)
-                        print('Article %s created' % article.name)
+                        print('Article %s created' % article.name.encode('utf-8').strip())
                         article.meta = zendesk_article
                         section.articles.append(article)
         return categories
